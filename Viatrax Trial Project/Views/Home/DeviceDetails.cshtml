@@ -1,0 +1,111 @@
+﻿@model  Viatrax_Trial_Project.Controllers.ReportsListingViewModel
+
+@{
+    ViewBag.Title = "Device Report Details Screen";
+    var ReportsList = ViewBag.ReportsList;
+    var i = 0;
+}
+
+<h1>@ViewBag.Title</h1>
+<br />
+
+<div class="jumbotron ">
+    @*<div class="row">
+            <div class="col-md-12">
+                <h2>Device Listing</h2>
+                <button class="btn btn-primary" type="button" onclick="window.location.href = '/Home/deviceListingDetails'"> Device Listing</button>
+            </div>
+
+        </div>*@
+
+
+    <div class="row">
+        <h2 style="background-color:darkgoldenrod; text-align:center">Device Information</h2>
+        <div class="col-md-4">
+            <p>
+                <b>KeyCode: </b> @{
+                    var value = Session["KeyCode"] == null ? "-" : Session["KeyCode"];
+                    @value;
+                }
+            </p>
+        </div>
+        <div class="col-md-4">
+            <p>
+                <b>IMEI: </b> @{
+                    value = Session["IMEI"] == null ? "-" : Session["IMEI"];
+                    @value;
+                }
+            </p>
+        </div>
+        <div class="col-md-4">
+            <p>
+                <b>Voltage: </b> @{
+                    value = Session["Voltage"] == null ? "-" : Session["Voltage"];
+                    @value;
+                }
+            </p>
+        </div>
+    </div>
+    <br />
+    <br />
+
+
+    @if (ViewBag.ReportsList != null)
+    {
+        <div class="row">
+            <h2 style="background-color:darkgoldenrod; text-align:center">Listing: GPS Reports</h2>
+            <div class=col-md-12>
+
+                <table class="table">
+                    <tr>
+
+
+                        <th style="text-align:center">Time</th>
+                        <th style="text-align:center">Gps Coordinates(Log , Lat)</th>
+                        <th style="text-align:center">Voltage </th>
+                        <th style="text-align:center">Speed</th>
+                        <th style="text-align:center">Heading</th>
+
+                    </tr>
+
+                    @foreach (var item in ReportsList.data)
+                    {
+                <tr>
+
+                    <td style="text-align:center">@(ReportsList.data[@i].updateTime )</td>
+
+                    <td style="text-align:center">
+                     
+                        @Html.ActionLink((string)ReportsList.data[@i].longitude, "ShowDeviceLocationOnMap", "GoogleMap", new
+                    {
+                        longitude = @ReportsList.data[@i].longitude,
+                        latitude = @ReportsList.data[@i].latitude
+
+                    }, null)
+                        ,
+
+                        @Html.ActionLink((string)ReportsList.data[@i].latitude, "ShowDeviceLocationOnMap", "GoogleMap", new
+                   {
+                       longitude = @ReportsList.data[@i].longitude,
+                       latitude = @ReportsList.data[@i].latitude
+
+                   }, null)
+
+                    </td>
+
+                    <td style="text-align:center">@(ReportsList.data[@i].voltage1)</td>
+                    <td style="text-align:center">@(ReportsList.data[@i].GPS_speed)</td>
+                    <td style="text-align:center">@(ReportsList.data[@i].GPS_heading)</td>
+
+                </tr>
+
+                        i++;
+                    }
+
+                </table>
+
+            </div>
+        </div>
+    }
+    </div>
+

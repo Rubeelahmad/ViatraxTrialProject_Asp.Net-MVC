@@ -1,0 +1,103 @@
+﻿@model  Viatrax_Trial_Project.Controllers.DeviceListingViewModel
+@{
+    ViewBag.Title = "Device Listing Screen";
+    var DeviceList = ViewBag.DeviceList;
+    var i = 0;
+}
+<h1>@ViewBag.Title</h1>
+<br />
+
+<div class="jumbotron ">
+
+
+    <div class="row">
+        <button id="btn_deviceDetails" class="btn btn-primary" type="button" onclick="window.location.href = '/Home/deviceListingDetails'">Show All Devices</button>
+        <div class=col-xl-12 style="float:right">
+            @using (Html.BeginForm("Search", "Home", FormMethod.Get))
+            {
+
+                @Html.TextBox("DeviceID", null, new { @placeholder = "Enter Device ID or IMEI...", required = "required" }) <span> &nbsp; </span>
+                <input class="btn btn-primary" style="float:right; height:30px" type="submit" name="submit" value="Search" />
+            }
+        </div>
+
+    </div>
+    <br />
+    @if (ViewBag.DeviceList != null)
+    {
+        <div class="row">
+
+            <h2 style="background-color:darkgoldenrod; text-align:center">List of Devices</h2>
+            <div class=col-md-12>
+
+                <table class="table">
+                    <tr>
+                        <th style="text-align:center">Device ID</th>
+                        <th style="text-align:center">Key Code</th>
+                        <th style="text-align:center">Last Report Time</th>
+                        <th style="text-align:center">Gps Coordinates(Log , Lat)</th>
+                        <th style="text-align:center">Voltage </th>
+
+                    </tr>
+                    @if (DeviceList.data != null)
+                    {
+                        foreach (var item in DeviceList.data)
+                        {
+                <tr>
+
+                    <td style="text-align:center">@(DeviceList.data[@i].deviceId)</td>
+                    <td style="text-align:center">
+                        @Html.ActionLink((string)DeviceList.data[@i].consumerKey, "DeviceDetails", "Home", new { KeyCode = @DeviceList.data[@i].consumerKey, IMEI = @DeviceList.data[@i].imei, Voltage = @DeviceList.data[@i].LastReportVoltage }, null)
+                    </td>
+                    <td style="text-align:center">@(DeviceList.data[@i].LastReportReceivedTime )</td>
+
+                    <td style="text-align:center">
+                        @{
+                            //convert longitude & latitude values into string
+                            float log = DeviceList.data[@i].LastReportLongitude;
+                            String log_str = log.ToString();
+
+                            float lat = DeviceList.data[i].LastReportLatitude;
+                            String lat_str = lat.ToString();
+
+
+                        }
+
+
+                        @Html.ActionLink((string)log_str, "ShowDeviceLocationOnMap", "GoogleMap", new
+                        {
+                            latitude = @DeviceList.data[@i].LastReportLatitude,
+                            longitude = @DeviceList.data[@i].LastReportLongitude
+                        }, null)
+                        ,
+                        @Html.ActionLink((string)lat_str, "ShowDeviceLocationOnMap", "GoogleMap", new
+                           {
+                               latitude = @DeviceList.data[@i].LastReportLatitude,
+                               longitude = @DeviceList.data[@i].LastReportLongitude
+                           }, null)
+
+                    </td>
+
+
+                    <td style="text-align:center">@(DeviceList.data[@i].LastReportVoltage)</td>
+
+                </tr>
+
+                            i++;
+                        }
+                    }
+
+
+                </table>
+
+            </div>
+        </div>
+    }
+
+    </div>
+
+
+
+
+
+
